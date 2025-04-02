@@ -1,5 +1,4 @@
-from src.road import Road
-import math
+from src.road.base_road import BaseRoad
 
 class BaseVehicle:
     DEPATURE_TIME: float = 0.0,
@@ -18,7 +17,9 @@ class BaseVehicle:
         next_velocity_y: float,
         next_acceleration_x: float,
         next_acceleration_y: float,
-        on_which_road: Road,
+        on_which_road: BaseRoad,
+        leader: None,
+        follower: None,
         depature_time: float = DEPATURE_TIME,
     ) -> None:
         self.id = id,
@@ -35,10 +36,15 @@ class BaseVehicle:
         self.next_velocity_y = next_velocity_y,
         self.next_acceleration_x = next_acceleration_x,
         self.next_acceleration_y = next_acceleration_y,
+        self.on_which_road = on_which_road,
+        self.leader = leader,
+        self.follower = follower
     
-    def get_current_acceleration(self) -> float:
-        return math.sqrt(self.a_x**2 + self.a_y**2)
-
-    def get_current_speed(self) -> float:
-        return math.sqrt(self.v_x**2 + self.v_y**2)
+    def update_acceleration_velocity_position(self):
+        self.current_pos_x = self.next_pos_x
+        self.current_pos_y = self.next_pos_y
+        self.current_velocity_x = self.next_velocity_x
+        self.current_velocity_y = self.next_velocity_y
+        self.current_acceleration_x = self.next_acceleration_x
+        self.current_acceleration_y = self.next_acceleration_y
     

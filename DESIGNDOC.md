@@ -22,6 +22,7 @@ classDiagram
       BaseVehicle : -Road on_which_road
       BaseVehicle : +obj leader
       BaseVehicle : +obj follower
+      BaseVehicle : +update_acceleration_velocity_position()
       
 ```
 
