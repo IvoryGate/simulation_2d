@@ -1,0 +1,12 @@
+{
+    "parameters":
+    {
+        "start_time":0.0,
+        "end_time":3600.0,
+        "time_step":0.1
+    },
+    "path":
+    {
+        "details":""
+    }
+}

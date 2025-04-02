@@ -1,1 +1,1 @@
-This is a program used to simulate 
+This is a two-dimensional traffic simulation program. 

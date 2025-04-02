@@ -21,8 +21,6 @@ classDiagram
       BaseVehicle : -float next_acceleration_y
       BaseVehicle : -Road on_which_road
       
-      BaseVehicle : +isMammal()
-      BaseVehicle : +mate()
 ```
 
 ## Car
@@ -44,10 +42,12 @@ classDiagram
     BaseVehicle : -float next_acceleration_x
     BaseVehicle : -float next_acceleration_y
     BaseVehicle : -Road on_which_road
+    BaseVehicle : +obj leader
+    BaseVehicle : +obj follower
       
-    BaseVehicle : +isMammal()
-    BaseVehicle : +mate()	
 	BaseVehicle <-- Car
+	Car : +float car_length
+	Car : +float car_width
 	
 ```
 
