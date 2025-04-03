@@ -43,5 +43,5 @@ class Car(BaseVehicle):
             follower, 
             depature_time
         )
-        self. car_length = car_length,
+        self. car_length = car_length
         self. car_width = car_width

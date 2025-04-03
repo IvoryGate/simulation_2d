@@ -8,11 +8,11 @@ class BaseRoad:
         max_allowed_speed: float,
         vehicles_list: list,
     ) -> None:
-        self.id = id,
-        self.central_line = central_line,
-        self.road_length = road_length,
-        self.road_width = road_width,
-        self.max_allowed_speed = max_allowed_speed,
+        self.id = id
+        self.central_line = central_line
+        self.road_length = road_length
+        self.road_width = road_width
+        self.max_allowed_speed = max_allowed_speed
         self.vehicles_list = vehicles_list
 
     

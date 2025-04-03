@@ -19,7 +19,7 @@ classDiagram
       BaseVehicle : -float next_velocity_y
       BaseVehicle : -float next_acceleration_x
       BaseVehicle : -float next_acceleration_y
-      BaseVehicle ；+String on_which_road_id
+      BaseVehicle : +String on_which_road_id
       BaseVehicle : -Road on_which_road
       BaseVehicle : +obj leader
       BaseVehicle : +obj follower
@@ -45,7 +45,7 @@ classDiagram
       BaseVehicle : -float next_velocity_y
       BaseVehicle : -float next_acceleration_x
       BaseVehicle : -float next_acceleration_y
-      BaseVehicle ；+String on_which_road_id
+      BaseVehicle : +String on_which_road_id
       BaseVehicle : -Road on_which_road
       BaseVehicle : +obj leader
       BaseVehicle : +obj follower
