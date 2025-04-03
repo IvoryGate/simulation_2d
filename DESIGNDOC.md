@@ -19,6 +19,7 @@ classDiagram
       BaseVehicle : -float next_velocity_y
       BaseVehicle : -float next_acceleration_x
       BaseVehicle : -float next_acceleration_y
+      BaseVehicle ；+String on_which_road_id
       BaseVehicle : -Road on_which_road
       BaseVehicle : +obj leader
       BaseVehicle : +obj follower
@@ -30,23 +31,25 @@ classDiagram
 
 ```mermaid
 classDiagram
-    BaseVehicle : +String id
-    BaseVehicle : -float depature_time
-    BaseVehicle : -float current_pos_x
-    BaseVehicle : -float current_pos_y
-    BaseVehicle : -float current_velocity_x
-    BaseVehicle : -float current_velocity_y
-    BaseVehicle : -float current_acceleration_x
-    BaseVehicle : -float current_acceleration_y
-    BaseVehicle : -float next_pos_x
-    BaseVehicle : -float next_pos_y
-    BaseVehicle : -float next_velocity_x
-    BaseVehicle : -float next_velocity_y
-    BaseVehicle : -float next_acceleration_x
-    BaseVehicle : -float next_acceleration_y
-    BaseVehicle : -Road on_which_road
-    BaseVehicle : +obj leader
-    BaseVehicle : +obj follower
+      BaseVehicle : +String id
+      BaseVehicle : -float depature_time
+      BaseVehicle : -float current_pos_x
+      BaseVehicle : -float current_pos_y
+      BaseVehicle : -float current_velocity_x
+      BaseVehicle : -float current_velocity_y
+      BaseVehicle : -float current_acceleration_x
+      BaseVehicle : -float current_acceleration_y
+      BaseVehicle : -float next_pos_x
+      BaseVehicle : -float next_pos_y
+      BaseVehicle : -float next_velocity_x
+      BaseVehicle : -float next_velocity_y
+      BaseVehicle : -float next_acceleration_x
+      BaseVehicle : -float next_acceleration_y
+      BaseVehicle ；+String on_which_road_id
+      BaseVehicle : -Road on_which_road
+      BaseVehicle : +obj leader
+      BaseVehicle : +obj follower
+      BaseVehicle : +update_acceleration_velocity_position()
       
 	BaseVehicle <-- Car
 	Car : +float car_length
@@ -76,6 +79,16 @@ classDiagram
 ## RampRoad
 
 `RampRoad`继承自`BaseRoad`类，除了该路段的基本属性方法外，还包括匝道部分。
+
+
+## Calculate
+
+```mermaid
+classDiagram
+    Calculate : +calculate_repulsion()
+    Calculate : +calculate_acceleration_willing()
+    Calculate : +calculate_centripetal_force()
+```
 
 # files
 
