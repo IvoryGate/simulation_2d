@@ -1,5 +1,3 @@
-from src.road.base_road import BaseRoad
-
 class BaseVehicle:
     DEPATURE_TIME: float = 0.0,
     def __init__(
@@ -17,7 +15,8 @@ class BaseVehicle:
         next_velocity_y: float,
         next_acceleration_x: float,
         next_acceleration_y: float,
-        on_which_road: BaseRoad,
+        on_which_road_id: str,
+        on_which_road: object,
         leader: None,
         follower: None,
         depature_time: float = DEPATURE_TIME,
@@ -36,6 +35,7 @@ class BaseVehicle:
         self.next_velocity_y = next_velocity_y,
         self.next_acceleration_x = next_acceleration_x,
         self.next_acceleration_y = next_acceleration_y,
+        self.on_which_road_id = on_which_road_id,
         self.on_which_road = on_which_road,
         self.leader = leader,
         self.follower = follower

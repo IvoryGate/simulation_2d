@@ -1,6 +1,4 @@
-from src.road.base_road import BaseRoad
-from src.vehicle.base_vehicle import BaseVehicle
-
+from ..vehicle.base_vehicle import BaseVehicle
 
 class Car(BaseVehicle):
     def __init__(
@@ -16,8 +14,9 @@ class Car(BaseVehicle):
         next_velocity_x: float, 
         next_velocity_y: float, 
         next_acceleration_x: float, 
-        next_acceleration_y: float, 
-        on_which_road: BaseRoad, 
+        next_acceleration_y: float,
+        on_which_road_id: str, 
+        on_which_road: object, 
         leader: None, 
         follower: None, 
         depature_time: float, 
@@ -37,7 +36,8 @@ class Car(BaseVehicle):
             next_velocity_x, 
             next_velocity_y, 
             next_acceleration_x, 
-            next_acceleration_y, 
+            next_acceleration_y,
+            on_which_road_id,
             on_which_road, 
             leader, 
             follower, 

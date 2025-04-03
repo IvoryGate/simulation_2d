@@ -1,5 +1,3 @@
-from src.vehicle.car import Car
-
 class BaseRoad:
     def __init__(
         self,
@@ -8,7 +6,7 @@ class BaseRoad:
         road_length: float,
         road_width: float,
         max_allowed_speed: float,
-        vehicles_list: list[Car],
+        vehicles_list: list,
     ) -> None:
         self.id = id,
         self.central_line = central_line,
