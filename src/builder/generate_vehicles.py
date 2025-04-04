@@ -1,5 +1,6 @@
 import random
 from ..vehicle.car import Car
+from src.vehicle.car import Car
 
 class GenerateVehicles:
     FLOWS:int = 10
@@ -18,7 +19,6 @@ class GenerateVehicles:
         self.min_interval = min_interval
         self.flows = flows
 
-    
     def calculate_total_time(self):
         return self.end_time - self.start_time
 

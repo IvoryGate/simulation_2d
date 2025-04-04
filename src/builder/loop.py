@@ -1,3 +1,6 @@
+from src.tools.parse_config import ParseConfig
+from src.builder.build_net import BuildRoads
+
 class Loop:
     START_TIME:float = 0.0
     END_TIME:float = 3600.0
@@ -16,15 +19,25 @@ class Loop:
     @staticmethod
     def float_range(start, stop, step):
         while start < stop:
-            yield start
+            yield round(start,1)
             start += step
 
-    def load_config() -> dict:
-        pass
+   
+    def load_config(self,config_path) -> dict:
+        config = ParseConfig(config_path=config_path).load_json()
+        self.start_time = config["parameters"]["start_time"]
+        self.end_time = config["parameters"]["end_time"]
+        self.per_step = config["parameters"]["time_step"]
+        self.net_config_path = config["paths"]["net_file"]
 
-    def load_net():
-        pass
+    def load_net(self):
+        net = BuildRoads(self.net_config_path).build_net()
+        return net
+        
 
-    def run(self):
-        for step in Loop.float_range(self.start_time,self.end_time,self.per_step):
-            print("hahaha")
+    def run(self,config_path):
+        self.load_config(config_path=config_path)
+        net = self.load_net()
+        print(net)
+        # for step in Loop.float_range(self.start_time,self.end_time,self.per_step):
+        #     print(step)

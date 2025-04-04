@@ -1,6 +1,8 @@
 from ..vehicle.base_vehicle import BaseVehicle
 
 class Car(BaseVehicle):
+    CAR_LENGTH:float = 5.0
+    CAR_WIDTH:float = 2.0
     def __init__(
         self, id: str, 
         current_pos_x: float, 
@@ -20,8 +22,8 @@ class Car(BaseVehicle):
         leader: None, 
         follower: None, 
         depature_time: float, 
-        car_length: float, 
-        car_width: float
+        car_length: float = CAR_LENGTH, 
+        car_width: float = CAR_WIDTH
     ) -> None:
         super().__init__(
             id, 

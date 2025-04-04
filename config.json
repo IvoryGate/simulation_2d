@@ -5,8 +5,14 @@
         "end_time":3600.0,
         "time_step":0.1
     },
-    "path":
+    "paths":
     {
-        "details":""
+        "net_file":"F:/桌面/simulation_2d/datas/net.json",
+        "flows_file":"F:/桌面/simulation_2d/datas/flows.json",
+        "detail_output":""
+    },
+    "functions":
+    {
+        "log":"True"
     }
 }

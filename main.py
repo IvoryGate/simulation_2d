@@ -1,4 +1,5 @@
 from src.builder.loop import Loop
 
 if __name__ == "__main__":
-    Loop().run()
+    config_path = r"F:\桌面\simulation_2d\config.json"
+    Loop().run(config_path=config_path)

@@ -1,0 +1,17 @@
+{
+    "main_road_0":{
+        "flow":30,
+        "max_interval":5,
+        "min_interval":1
+    },
+    "main_road_1":{
+        "flow":30,
+        "max_interval":5,
+        "min_interval":1
+    },
+    "ramp_road":{
+        "flow":10,
+        "max_interval":7,
+        "min_interval":1
+    }
+}
