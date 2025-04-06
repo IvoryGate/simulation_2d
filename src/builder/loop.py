@@ -1,5 +1,7 @@
 from src.tools.parse_config import ParseConfig
 from src.builder.build_net import BuildRoads
+from src.builder.load_flows_on_road import LoadFlowsOnRoad
+from src.tools.update import Update
 
 class Loop:
     START_TIME:float = 0.0
@@ -28,6 +30,7 @@ class Loop:
         self.end_time = config["parameters"]["end_time"]
         self.per_step = config["parameters"]["time_step"]
         self.net_config_path = config["paths"]["net_file"]
+        self.flows_path = config["paths"]["flows_file"]
 
     def load_net(self):
         net = BuildRoads(self.net_config_path).build_net()
@@ -36,6 +39,14 @@ class Loop:
     def run(self,config_path):
         self.load_config(config_path=config_path)
         net = self.load_net()
-        print(net)
-        # for step in Loop.float_range(self.start_time,self.end_time,self.per_step):
-        #     print(step)
+        combined_net_flows = LoadFlowsOnRoad(
+            start_time=self.start_time,
+            end_time=self.end_time,
+            flows_config_path=self.flows_path,
+            net=net
+        ).match_flows_and_roads()
+        Update.init_sort_and_assign(combined_net_flows=combined_net_flows)
+        update = Update(combined_net_flows=combined_net_flows)
+        for step in Loop.float_range(self.start_time,self.end_time,self.per_step):
+            update.get_step(step=step)
+            update.update_all()

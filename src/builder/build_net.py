@@ -16,13 +16,13 @@ class BuildRoads:
         net_dict = self.load_net_cofig()
         for key,value in net_dict.items():
             road = BaseRoad(
-                key,
-                value["central_line"],
-                value["road_length"],
-                value["road_width"],
-                value["max_allowed_speed"],
-                [],
-                value["direction"]
+                id=key,
+                central_line=value["central_line"],
+                road_length=value["road_length"],
+                road_width=value["road_width"],
+                max_allowed_speed=value["max_allowed_speed"],
+                vehicles_list=[],
+                direction=value["direction"]
             )
             net.append(road)
         return net
