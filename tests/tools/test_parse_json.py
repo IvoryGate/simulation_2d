@@ -6,13 +6,13 @@ from src.tools.parse_net_file import ParseNet
 
 class TestParse(unittest.TestCase):
     def test_load_json(self):
-        config_path = r"F:\桌面\simulation_2d\config.json"
+        config_path = "F:/桌面/simulation_2d/config.json"
         result = ParseConfig(config_path=config_path).load_json()
         print(type(result))
         print(result)
 
     def test_check_required_keys(self):
-        config_path = r"F:\桌面\simulation_2d\config.json"
+        config_path = "F:/桌面/simulation_2d/config.json"
         with open(config_path,"r") as file:
             json_data = json.load(file)
         data = json_data
@@ -23,7 +23,7 @@ class TestParse(unittest.TestCase):
             print(f"Error: {e}")
     
     def test_load_net(self):
-        net_config = r"F:\桌面\simulation_2d\datas\net.json"
+        net_config = "F:/桌面/simulation_2d/datas/net.json"
         result = ParseNet(net_config_path=net_config).load_json()
         print(type(result))
         print(result)

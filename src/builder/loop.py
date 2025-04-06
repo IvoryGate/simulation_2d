@@ -22,7 +22,6 @@ class Loop:
             yield round(start,1)
             start += step
 
-   
     def load_config(self,config_path) -> dict:
         config = ParseConfig(config_path=config_path).load_json()
         self.start_time = config["parameters"]["start_time"]
@@ -34,7 +33,6 @@ class Loop:
         net = BuildRoads(self.net_config_path).build_net()
         return net
         
-
     def run(self,config_path):
         self.load_config(config_path=config_path)
         net = self.load_net()

@@ -21,8 +21,7 @@ class ParseConfig():
             for key in keys:
                 if key not in json_data[section]:
                     raise KeyError(f"Missing key: {key} in section {section}")
-
-    
+ 
     def load_json(self):
         try:
             with open(self.config_path,"r") as file:

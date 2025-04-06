@@ -22,7 +22,6 @@ class GenerateVehicles:
     def calculate_total_time(self):
         return self.end_time - self.start_time
 
-    
     def generate_per_vehicle_time(self):
         total_time = GenerateVehicles.calculate_total_time()
         time_series = [random.uniform(0, total_time) for _ in range(self.flows)]  # 随机生成车辆发车时间
@@ -37,7 +36,6 @@ class GenerateVehicles:
             time_series[-1] = total_time
 
         return time_series
-    
     
     def generate_vehicles(
         self,
