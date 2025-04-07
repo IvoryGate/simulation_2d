@@ -1,6 +1,6 @@
 import json
 
-class ParseNet():
+class ParseNet:
 
     def __init__(
         self,
