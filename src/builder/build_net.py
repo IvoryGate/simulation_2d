@@ -22,6 +22,10 @@ class BuildRoads:
                 road_width=value["road_width"],
                 max_allowed_speed=value["max_allowed_speed"],
                 vehicles_list=[],
+                leader_road_id = value["leader_road_id"],
+                follower_road_id = value["follower_road_id"],
+                left_road_id = value["left_road_id"],
+                right_road_id = value["right_road_id"],
                 direction=value["direction"]
             )
             net.append(road)

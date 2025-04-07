@@ -14,6 +14,20 @@ class LoadFlowsOnRoad:
         self.flows_config_path =flows_config_path
         self.net = net
 
+    @staticmethod
+    def connect_road(net):
+        for road in net.values():
+            if road.leader_road_id != "null":
+                print(road.leader_road_id)
+                road.leader_road = net[road.leader_road_id]
+            if road.follower_road_id != "null":
+                road.follower_road_id = net[road.follower_road_id]
+            if road.left_road_id != "null":
+                road.left_road = net[road.left_road_id]
+            if road.right_road_id != "null":
+                road.right_road = net[road.right_road_id]
+
+
     def load_flows_cofig(self):
         flows_config = ParseFlows(self.flows_config_path).load_json()
         return flows_config
@@ -50,4 +64,6 @@ class LoadFlowsOnRoad:
                         follower=None
                     )
             combined_net_flows[f"{road.id}"] = road
+        LoadFlowsOnRoad.connect_road(combined_net_flows)    
         return combined_net_flows
+    

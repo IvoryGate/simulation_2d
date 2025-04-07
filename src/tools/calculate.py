@@ -1,5 +1,12 @@
 import numpy as np
+import src.tools.constant_values as params
 class Caculate:
+    @staticmethod
+    def isHeader(car) -> bool:
+        if car.leader == None:
+            return True
+        return False
+
     @staticmethod
     def get_vehicle_current_scalar_acceleration(car:object) -> float:
         return np.sqrt(car.current_acceleration_x**2 + car.current_acceleration_y**2)
@@ -33,3 +40,35 @@ class Caculate:
     def calculate_centripetal_force(car_i,k_1,k_2,current_central_line):
         return np.array([[-car_i.current_velocity_x*k_1 - (car_i.current_pos_x-current_central_line)*k_2],[0]])
     
+    @staticmethod
+    def find_next_lane(car):
+        """
+        This method is used to find the lanes which has
+        vehicles generating repulsion force.
+        """
+        vehicle = []
+        if car.on_which_road != None:
+            vehicle.append(car.on_which_road.vehicles_list)
+        if car.on_which_road.leader_road != None:
+            vehicle.append(car.on_which_road.leader_road.vehicles_list)
+        if car.on_which_road.right_road != None:
+            vehicle.append(car.on_which_road.right_road.vehicles_list)
+        if car.on_which_road.left_road != None:
+            vehicle.append(car.on_which_road.left_road.vehicles_list)
+        return vehicle
+
+    @staticmethod
+    def calculate_all_repulsion_force(car,vehicles):
+        join_force = np.array([[0.], [0.]])
+        for other_car in vehicles:
+            if 0 < other_car.pos_y - car.pos_y <= 500 and 0 < other_car.pos_x - car.pos_x <= params.X_XING:
+                join_force += Caculate.calculate_repulsion(car_i=car, car_k=other_car, tao=params.TAO, s_r=params.S_R, x_xing=params.X_XING, c_2=params.C_2, c_3=params.C_3)
+            else:
+                join_force += np.array([[0.], [0.]])
+        return join_force
+
+    @staticmethod
+    def calculate_repulsion_force(car):
+        vehicles = Caculate.find_next_lane(car)
+        join_force = Caculate.calculate_all_repulsion_force(car = car,vehicles=vehicles)
+        return join_force

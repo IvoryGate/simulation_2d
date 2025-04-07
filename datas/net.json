@@ -4,27 +4,43 @@
         "road_length":3000.0,
         "road_width":3.5,
         "max_allowed_speed":22.5,
-        "direction":[0.0,1.0]
+        "direction":[0.0,1.0],
+        "leader_road_id":"null",
+        "follower_road_id":"null",
+        "left_road_id":"null",
+        "right_road_id":"main_road_1"
     },
     "main_road_1":{
         "central_line":5.25,
         "road_length":3000.0,
         "road_width":3.5,
         "max_allowed_speed":22.5,
-        "direction":[0.0,1.0]
+        "direction":[0.0,1.0],
+        "leader_road_id":"null",
+        "follower_road_id":"null",
+        "left_road_id":"main_road_0",
+        "right_road_id":"acceleration_road"
     },
     "ramp_road":{
         "central_line":8.75,
         "road_length":1400.0,
         "road_width":3.5,
         "max_allowed_speed":14.0,
-        "direction":[0.0,1.0]
+        "direction":[0.0,1.0],
+        "leader_road_id":"acceleration_road",
+        "follower_road_id":"null",
+        "left_road_id":"null",
+        "right_road_id":"null"
     },
     "acceleration_road":{
         "central_line":8.75,
         "road_length":150.0,
         "road_width":3.5,
         "max_allowed_speed":18.0,
-        "direction":[0.0,1.0]
+        "direction":[0.0,1.0],
+        "leader_road_id":"null",
+        "follower_road_id":"ramp_road",
+        "left_road_id":"main_road_1",
+        "right_road_id":"null"
     }
 }
