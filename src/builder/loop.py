@@ -31,6 +31,7 @@ class Loop:
         self.per_step = config["parameters"]["time_step"]
         self.net_config_path = config["paths"]["net_file"]
         self.flows_path = config["paths"]["flows_file"]
+        self.detail_output = config["paths"]["detail_output"]
 
     def load_net(self):
         net = BuildRoads(self.net_config_path).build_net()
@@ -46,7 +47,11 @@ class Loop:
             net=net
         ).match_flows_and_roads()
         Update.init_sort_and_assign(combined_net_flows=combined_net_flows)
-        update = Update(combined_net_flows=combined_net_flows)
+        update = Update(delta_step=self.per_step,combined_net_flows=combined_net_flows)
+        with open(self.detail_output, 'w', newline='') as file:
+            pass
+        df = update.create_record_file()
         for step in Loop.float_range(self.start_time,self.end_time,self.per_step):
             update.get_step(step=step)
-            update.update_all()
+            # print(update.step)
+            update.unpdate_and_record(df=df,output_file=self.detail_output)

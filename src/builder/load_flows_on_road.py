@@ -1,6 +1,6 @@
 from src.tools.parse_flows_file import ParseFlows
 from src.builder.generate_vehicles import GenerateVehicles
-from src.vehicle.base_vehicle import BaseVehicle
+import uuid
 
 class LoadFlowsOnRoad:
     def __init__(
@@ -46,27 +46,25 @@ class LoadFlowsOnRoad:
                         min_interval=flows_dict[key]["min_interval"],
                         flows=flows_dict[key]["flow"]
                     ).generate_vehicles(
-                        id=key,
+                        id=uuid.uuid4(),
                         current_pos_x=road.central_line,
                         current_pos_y=0,
                         current_velocity_y=road.max_allowed_speed,
                         current_velocity_x=0,
                         current_acceleration_x=0,
                         current_acceleration_y=0,
-                        next_pos_x=None,
-                        next_pos_y=None,
-                        next_velocity_x=None,
-                        next_velocity_y=None,
-                        next_acceleration_x=None,
-                        next_acceleration_y=None,
+                        next_pos_x=0,
+                        next_pos_y=0,
+                        next_velocity_x=0,
+                        next_velocity_y=0,
+                        next_acceleration_x=0,
+                        next_acceleration_y=0,
                         on_which_road_id=key,
                         on_which_road=road,
                         leader=None,
                         follower=None
                     )
             combined_net_flows[f"{road.id}"] = road
-        #???
-        virtual_obstacle = BaseVehicle(current_pos_y=1550, current_pos_x=8.75,current_velocity_y=0,current_velocity_x=0,next_velocity_x=0,next_velocity_x=0,on_which_road_id="acceleration_road",on_which_road=combined_net_flows["acceleration_road"])  # 匝道区域虚拟障碍物
         LoadFlowsOnRoad.connect_road(combined_net_flows)    
         return combined_net_flows
     

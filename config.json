@@ -2,14 +2,14 @@
     "parameters":
     {
         "start_time":0.0,
-        "end_time":3600.0,
+        "end_time":1.0,
         "time_step":0.1
     },
     "paths":
     {
-        "net_file":"F:/桌面/simulation_2d/datas/net.json",
-        "flows_file":"F:/桌面/simulation_2d/datas/flows.json",
-        "detail_output":""
+        "net_file":"C:/Users/lenovo/Desktop/simulation_2d/datas/net.json",
+        "flows_file":"C:/Users/lenovo/Desktop/simulation_2d/datas/flows.json",
+        "detail_output":"C:/Users/lenovo/Desktop/simulation_2d/datas/output.csv"
     },
     "functions":
     {

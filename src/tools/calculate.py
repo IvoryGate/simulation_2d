@@ -49,20 +49,20 @@ class Caculate:
         """
         vehicle = []
         if car.on_which_road != None:
-            vehicle.append(car.on_which_road.vehicles_list)
+            vehicle += car.on_which_road.vehicles_list
         if car.on_which_road.leader_road != None:
-            vehicle.append(car.on_which_road.leader_road.vehicles_list)
+            vehicle += car.on_which_road.leader_road.vehicles_list
         if car.on_which_road.right_road != None:
-            vehicle.append(car.on_which_road.right_road.vehicles_list)
+            vehicle += car.on_which_road.right_road.vehicles_list
         if car.on_which_road.left_road != None:
-            vehicle.append(car.on_which_road.left_road.vehicles_list)
+            vehicle += car.on_which_road.left_road.vehicles_list
         return vehicle
 
     @staticmethod
     def calculate_all_repulsion_force(car:Car,vehicles):
         join_force = np.array([[0.], [0.]])
         for other_car in vehicles:
-            if 0 < other_car.current_pos_y - car.current_pos_y <= 500 and 0 < other_car.pos_x - car.pos_x <= params.X_XING:
+            if 0 < other_car.current_pos_y - car.current_pos_y <= 500 and 0 < other_car.current_pos_x - car.current_pos_x <= params.X_XING:
                 join_force += Caculate.calculate_repulsion(car_i=car, car_k=other_car, tao=params.TAO, s_r=params.S_R, x_xing=params.X_XING, c_2=params.C_2, c_3=params.C_3)
             else:
                 join_force += np.array([[0.], [0.]])
@@ -83,12 +83,12 @@ class Caculate:
         rear_headway   = np.inf
         for car in beside_road_vehicles:
             if 0 < car.current_pos_y - car_ramp.current_pos_y <= 300:
-                dist = car.current_pos_y - car_ramp.current_pos_y - car.length
+                dist = car.current_pos_y - car_ramp.current_pos_y - car.car_length
                 if 0 < dist < min_front_dist :
                     min_front_dist = dist
-                    front_headway = dist/car_ramp.v_y
+                    front_headway = dist/car_ramp.current_velocity_y
             elif 0 < car_ramp.current_pos_y - car.current_pos_y <= 300:
-                dist = car_ramp.current_pos_y - car.current_pos_y - car_ramp.length
+                dist = car_ramp.current_pos_y - car.current_pos_y - car_ramp.car_length
                 if 0 < dist < min_rear_dist :
                     min_rear_dist = dist
                     rear_headway = dist/ car_ramp.v_y
@@ -103,11 +103,11 @@ class Caculate:
         for vehicle in main_vehicles:  
             delta_y_rear = car.current_pos_y - vehicle.current_pos_y
             if 0 < delta_y_rear <= 200:
-                dist = delta_y_rear - vehicle.length
+                dist = delta_y_rear - vehicle.car_length
                 if dist > 0 and dist < min_rear_dist:
                     min_rear_dist = dist
-        min_rear_headway = min_rear_headway/car.v_y
+        min_rear_headway = min_rear_headway/car.current_velocity_y
         if (min_front_dist >= 2*(car.leader.current_pos_y - car.current_pos_y) and 
-            min_rear_headway >= rear_safe_headway ):
+            min_rear_headway >= rear_safe_headway):
             return True
         return False

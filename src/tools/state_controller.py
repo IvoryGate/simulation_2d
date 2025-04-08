@@ -2,6 +2,8 @@ from src.vehicle.car import Car
 from src.tools.calculate import Caculate
 from src.road.base_road import BaseRoad
 import src.tools.constant_values as params
+from src.vehicle.base_vehicle import BaseVehicle
+import numpy as np
 import random
 
 class StateController:
@@ -99,12 +101,13 @@ class StateController:
             return car.on_which_road.left_road
 
     @staticmethod
-    def probably_lane_changed(car,main_vehicles,rear_safe_headway):
+    def probably_lane_changed(car):
         "主路车辆相互变道"
         all_force = Caculate.calculate_repulsion_force(car)
         all_force += Caculate.calculate_acceleration_willing(car_i=car)
         all_force += Caculate.calculate_centripetal_force(car_i=car)
-        if Caculate.main_find_closest_vehicles(main_vehicles = main_vehicles, car = car, rear_headway = rear_safe_headway):
+        main_road = StateController.switch_to_which_lane(car) 
+        if Caculate.main_find_closest_vehicles(main_vehicles = main_road.vehicles_list, car = car, rear_headway = params.Rear_Safe_headway):
             if random.random() <= params.RAO_MAIN:
                 road = StateController.switch_to_which_lane(car=car)
                 road.vehicles_list.append(car)
@@ -116,52 +119,56 @@ class StateController:
     @staticmethod
     def lane_changed(car):
         "辅路车辆主动向主路变道"
-        min_front_dist,min_rear_dist,front_headway,rear_headway = Caculate.ramp_find_nearest_car_besides_road(car_ramp = car,beside_road_vehicles = car.on_which_road.left_road.vehicles_list) 
-        incentive = rear_headway >= params.T_sf
-        safety = min_front_dist >= params.X_sf and min_rear_dist >= params.X_sf 
-        if incentive and safety and random.random() <= params.RAO_RAMP:
-            road = StateController.switch_to_which_lane(car=car)
-            road.vehicles_list.append(car)
-            car.on_which_road.vehicles_list.remove(car)
-            car.on_which_road = road
-            all_force  = Caculate.calculate_repulsion_force(car)
-            all_force += Caculate.calculate_acceleration_willing(car_i=car)
-            all_force += Caculate.calculate_centripetal_force(car_i=car)
+        if car.on_which_road.left_road is not None:
+            min_front_dist,min_rear_dist,front_headway,rear_headway = Caculate.ramp_find_nearest_car_besides_road(car_ramp = car,beside_road_vehicles = car.on_which_road.left_road.vehicles_list) 
+            incentive = rear_headway >= params.T_sf
+            safety = min_front_dist >= params.X_sf and min_rear_dist >= params.X_sf 
+            if incentive and safety and random.random() <= params.RAO_RAMP:
+                road = StateController.switch_to_which_lane(car=car)
+                road.vehicles_list.append(car)
+                car.on_which_road.vehicles_list.remove(car)
+                car.on_which_road = road
+                all_force  = Caculate.calculate_repulsion_force(car)
+                all_force += Caculate.calculate_acceleration_willing(car_i=car)
+                all_force += Caculate.calculate_centripetal_force(car_i=car)
 
-        else:
-            all_force  = Caculate.calculate_repulsion_force(car)
-            all_force += Caculate.calculate_acceleration_willing(car_i=car)
-            all_force += Caculate.calculate_centripetal_force(car_i=car)
-        return all_force
+            else:
+                all_force  = Caculate.calculate_repulsion_force(car)
+                all_force += Caculate.calculate_acceleration_willing(car_i=car)
+                all_force += Caculate.calculate_centripetal_force(car_i=car)
+            return all_force
+        return np.array([[0.], [0.]])
 
     @staticmethod
     def compelling_lane_changed(car,virtual_obstacle):
         "辅路车辆强制变道"
-        min_front_dist,min_rear_dist,front_headway,rear_headway = Caculate.ramp_find_nearest_car_besides_road(car_ramp = car,beside_road_vehicles = car.on_which_road.left_road.vehicles_list)
-        incentive = rear_headway >= params.T_sf_xing
-        safety = min_front_dist >= params.X_sf and min_rear_dist >= params.X_sf 
-        if incentive and safety: 
-            road = StateController.switch_to_which_lane(car=car)
-            road.vehicles_list.append(car)
-            car.on_which_road.vehicles_list.remove(car)
-            car.on_which_road = road
-            all_force  = Caculate.calculate_repulsion_force(car)
-            all_force += Caculate.calculate_acceleration_willing(car_i=car)
-            all_force += Caculate.calculate_centripetal_force(car_i=car)
-        else:
-            all_force  = Caculate.calculate_repulsion(car_i = car, car_k=virtual_obstacle , tao = 1.5, s_r = 10, x_xing = 5, c_2 = 6, c_3= 6)
-            all_force += Caculate.calculate_repulsion_force(car)
-            all_force += Caculate.calculate_acceleration_willing(car_i=car)
-            all_force += Caculate.calculate_centripetal_force(car_i=car)
-        return all_force
+        if car.on_which_road.left_road is not None:
+            min_front_dist,min_rear_dist,front_headway,rear_headway = Caculate.ramp_find_nearest_car_besides_road(car_ramp = car,beside_road_vehicles = car.on_which_road.left_road.vehicles_list)
+            incentive = rear_headway >= params.T_sf_xing
+            safety = min_front_dist >= params.X_sf and min_rear_dist >= params.X_sf 
+            if incentive and safety: 
+                road = StateController.switch_to_which_lane(car=car)
+                road.vehicles_list.append(car)
+                car.on_which_road.vehicles_list.remove(car)
+                car.on_which_road = road
+                all_force  = Caculate.calculate_repulsion_force(car)
+                all_force += Caculate.calculate_acceleration_willing(car_i=car)
+                all_force += Caculate.calculate_centripetal_force(car_i=car)
+            else:
+                all_force  = Caculate.calculate_repulsion(car_i = car, car_k=virtual_obstacle , tao = 1.5, s_r = 10, x_xing = 5, c_2 = 6, c_3= 6)
+                all_force += Caculate.calculate_repulsion_force(car)
+                all_force += Caculate.calculate_acceleration_willing(car_i=car)
+                all_force += Caculate.calculate_centripetal_force(car_i=car)
+            return all_force
+        return np.array([[0.], [0.]])
 
     @staticmethod
-    def compelled_lane_changed(car):
+    def compelled_lane_changed(car:Car):
         "主路车辆被挤变道"
         all_force = Caculate.calculate_repulsion_force(car)
         all_force += Caculate.calculate_acceleration_willing(car_i=car)
         all_force += Caculate.calculate_centripetal_force(car_i=car)
-        if car.current_pos_x <= 3.75 or Caculate.main_find_closest_vehicles:
+        if car.current_pos_x <= 3.75 or Caculate.main_find_closest_vehicles(main_vehicles = car.on_which_road.left_road.vehicles_list, car = car, rear_headway = params.Rear_Safe_headway):
             road = StateController.switch_to_which_lane(car=car)
             road.vehicles_list.append(car)
             car.on_which_road.vehicles_list.remove(car)
@@ -173,17 +180,27 @@ class StateController:
     def handle_state(car:Car):
         match(StateController.get_state(car)):
             case "fric":
-                StateController.fric_state(car)
+                return StateController.fric_state(car)
             case "free":
-                StateController.free_state(car)
+                return StateController.free_state(car)
             case "lane_changed":
-                StateController.lane_changed(car,main_vehicles,rear_safe_headway)
+                return StateController.lane_changed(car)
             case "probably_lane_changed":
-                StateController.probably_lane_changed(car)
+                return StateController.probably_lane_changed(car)
             case "compelling_lane_changed":
-                StateController.compelling_lane_changed(car,virtual_obstacle)
+                virtual_obstacle = BaseVehicle(
+                    current_pos_y = 1550, 
+                    current_pos_x = 8.75,
+                    current_velocity_y = 0,
+                    current_velocity_x = 0,
+                    next_velocity_y = 0,
+                    next_velocity_x = 0,
+                    on_which_road_id = "obstacle",
+                    on_which_road = None
+                )
+                return StateController.compelling_lane_changed(car,virtual_obstacle)
             case "compelled_lane_changed":
-                StateController.compelled_lane_changed(car)
+                return StateController.compelled_lane_changed(car)
             case _ :
                 pass
 
