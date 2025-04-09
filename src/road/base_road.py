@@ -38,3 +38,17 @@ class BaseRoad:
         self.right_road = right_road
         self.direction = direction
     
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state['leader_road']
+        del state['follower_road']
+        del state['left_road']
+        del state['right_road']
+        return state
+    
+    def __setstate__(self,state):
+        self.__dict__.update(state)
+        self.leader_road = None
+        self.follower_road = None
+        self.left_road = None
+        self.right_road = None

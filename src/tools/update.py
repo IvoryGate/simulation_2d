@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 import os
 import threading
-from multiprocessing import Pool
+import pickle
+from multiprocessing import Pool,shared_memory,Queue
 
 class Update:
     def __init__(
@@ -15,6 +16,7 @@ class Update:
         self.delta_step = delta_step
         self.combined_net_flows = combined_net_flows
         self.step = step
+        self.shm,self.shm_size = self.create_shared_memory()
 
     @staticmethod
     def assign_leaders_and_followers(vehicles):
@@ -102,50 +104,58 @@ class Update:
             df = df.iloc[0:0]
 
     @staticmethod
-    def unpdate_and_record_per_road(step,road_id,output_file):
+    def unpdate_and_record_per_road(step,shm,size,output_file):
+        print(Update.de_serialized_data(shm=shm,size=size))
         df = pd.DataFrame({})
-        road = Update.combined_net_flows[f"{road_id}"]
         print("执行到这里了吗")
-        for vehicle in road.vehicles_list:
-            Update.get_next_acceleration_velocity_position(car=vehicle)
-            vehicle.update_acceleration_velocity_position()
-            new_df = pd.DataFrame({
-                "time": step,
-                "id": vehicle.id,
-                "a_x": vehicle.current_acceleration_x, 
-                "a_y": vehicle.current_acceleration_y, 
-                "v_x": vehicle.current_velocity_x,
-                "v_y": vehicle.current_velocity_y, 
-                "p_x": vehicle.current_pos_x, 
-                "p_y": vehicle.current_pos_y,
-                "road_id": vehicle.on_which_road_id
-            },index=[0])
-            df = pd.concat([df, new_df], ignore_index=True)
-        df.to_csv(
-            output_file,
-            mode="a",
-            header=not os.path.exists(output_file),
-            index=False
-        )
-        df = df.iloc[0:0]
+        # for vehicle in road.vehicles_list:
+        #     Update.get_next_acceleration_velocity_position(car=vehicle)
+        #     vehicle.update_acceleration_velocity_position()
+        #     new_df = pd.DataFrame({
+        #         "time": step,
+        #         "id": vehicle.id,
+        #         "a_x": vehicle.current_acceleration_x, 
+        #         "a_y": vehicle.current_acceleration_y, 
+        #         "v_x": vehicle.current_velocity_x,
+        #         "v_y": vehicle.current_velocity_y, 
+        #         "p_x": vehicle.current_pos_x, 
+        #         "p_y": vehicle.current_pos_y,
+        #         "road_id": vehicle.on_which_road_id
+        #     },index=[0])
+        #     df = pd.concat([df, new_df], ignore_index=True)
+        # df.to_csv(
+        #     output_file,
+        #     mode="a",
+        #     header=not os.path.exists(output_file),
+        #     index=False
+        # )
+        # df = df.iloc[0:0]
 
     def print_test(self,num):
         print(f"{num}")
 
+    def create_shared_memory(self):
+        serialized = pickle.dumps(self.combined_net_flows)
+        size = len(serialized)
+        shm = shared_memory.SharedMemory(create=True,size=size)
+        shm.buf[:size] = serialized
+        return shm,size
+
+    @staticmethod
+    def de_serialized_data(shm,size):
+        serialized_data =bytes(shm.buf[:size])
+        net = pickle.loads(serialized_data)
+        print(net)
+        
+
     def unpdate_and_record(self,output_file):
         pool = Pool(4)
-        # iterator = [(road,output_file) for road in self.combined_net_flows.values()]
         step = self.step
         for road in self.combined_net_flows.values():
-            road_id = road.id
+
             pool.apply_async(
                 Update.unpdate_and_record_per_road,
-                args=(step,road_id,output_file)
+                args=(step,self.shm,self.shm_size,output_file)
                 )
-        # for road in self.combined_net_flows.values():
-        #     pool.apply_async(
-        #         self.print_test,
-        #         args=(self.step,)
-        #         )
         pool.close()
         pool.join()
