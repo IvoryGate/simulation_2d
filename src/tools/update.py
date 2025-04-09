@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 import threading
+from multiprocessing import Pool
 
 class Update:
     def __init__(
@@ -69,13 +70,7 @@ class Update:
         self.get_next_velocity(car=car)
         self.get_next_position(car=car)
 
-    # def check_file_exist(self,output_path):
-    #     """
-    #     check whelther the file exists
-    #     if the file has been created,
-    #     """
-    #     pass
-    def create_record_file(self):
+    def create_record_file(self,detail_output):
         column_structure = {
             "time": "float64",
             "id": "object",
@@ -88,7 +83,12 @@ class Update:
             "road_id": "object"
         }
         df = pd.DataFrame(columns=column_structure.keys()).astype(column_structure)
-        return df
+        df.to_csv(
+            detail_output,
+            mode="a",
+            header=not os.path.exists(detail_output),
+            index=False
+        )
 
     def check_chunk_size(self,df,filename):
         chunk_size = 1000
@@ -101,30 +101,51 @@ class Update:
             )
             df = df.iloc[0:0]
 
-    def multi_thread():
-        threads = []   
-
-    def unpdate_and_record(self,df,output_file):
-        for road in self.combined_net_flows.values():
-            for vehicle in road.vehicles_list:
-                self.get_next_acceleration_velocity_position(car=vehicle)
-                vehicle.update_acceleration_velocity_position()
-                new_df = pd.DataFrame({
-                    "time": self.step,
-                    "id": vehicle.id,
-                    "a_x": vehicle.current_acceleration_x, 
-                    "a_y": vehicle.current_acceleration_y, 
-                    "v_x": vehicle.current_velocity_x,
-                    "v_y": vehicle.current_velocity_y, 
-                    "p_x": vehicle.current_pos_x, 
-                    "p_y": vehicle.current_pos_y,
-                    "road_id": vehicle.on_which_road_id
-                },index=[0])
-                df = pd.concat([df, new_df], ignore_index=True)
+    @staticmethod
+    def unpdate_and_record_per_road(step,road_id,output_file):
+        df = pd.DataFrame({})
+        road = Update.combined_net_flows[f"{road_id}"]
+        print("执行到这里了吗")
+        for vehicle in road.vehicles_list:
+            Update.get_next_acceleration_velocity_position(car=vehicle)
+            vehicle.update_acceleration_velocity_position()
+            new_df = pd.DataFrame({
+                "time": step,
+                "id": vehicle.id,
+                "a_x": vehicle.current_acceleration_x, 
+                "a_y": vehicle.current_acceleration_y, 
+                "v_x": vehicle.current_velocity_x,
+                "v_y": vehicle.current_velocity_y, 
+                "p_x": vehicle.current_pos_x, 
+                "p_y": vehicle.current_pos_y,
+                "road_id": vehicle.on_which_road_id
+            },index=[0])
+            df = pd.concat([df, new_df], ignore_index=True)
         df.to_csv(
-                output_file,
-                mode="a",
-                header=not os.path.exists(output_file),
-                index=False
-            )
+            output_file,
+            mode="a",
+            header=not os.path.exists(output_file),
+            index=False
+        )
         df = df.iloc[0:0]
+
+    def print_test(self,num):
+        print(f"{num}")
+
+    def unpdate_and_record(self,output_file):
+        pool = Pool(4)
+        # iterator = [(road,output_file) for road in self.combined_net_flows.values()]
+        step = self.step
+        for road in self.combined_net_flows.values():
+            road_id = road.id
+            pool.apply_async(
+                Update.unpdate_and_record_per_road,
+                args=(step,road_id,output_file)
+                )
+        # for road in self.combined_net_flows.values():
+        #     pool.apply_async(
+        #         self.print_test,
+        #         args=(self.step,)
+        #         )
+        pool.close()
+        pool.join()
