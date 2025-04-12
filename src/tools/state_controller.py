@@ -81,6 +81,7 @@ class StateController:
         all_force = Caculate.calculate_repulsion_force(car)
         all_force += Caculate.calculate_acceleration_willing(car_i=car)
         all_force += Caculate.calculate_centripetal_force(car_i=car)
+        # print("fric",all_force)
         return all_force
     
     @staticmethod
@@ -89,6 +90,7 @@ class StateController:
         all_force = Caculate.calculate_repulsion_force(car)
         all_force += Caculate.calculate_acceleration_willing(car_i=car)
         all_force += Caculate.calculate_centripetal_force(car_i=car)
+        # print("free",all_force)
         return all_force
     
     @staticmethod
@@ -165,7 +167,7 @@ class StateController:
     @staticmethod
     def compelled_lane_changed(car:Car):
         "主路车辆被挤变道"
-        all_force = Caculate.calculate_repulsion_force(car)
+        all_force  = Caculate.calculate_repulsion_force(car)
         all_force += Caculate.calculate_acceleration_willing(car_i=car)
         all_force += Caculate.calculate_centripetal_force(car_i=car)
         if car.current_pos_x <= 3.75 or Caculate.main_find_closest_vehicles(main_vehicles = car.on_which_road.left_road.vehicles_list, car = car, rear_headway = params.Rear_Safe_headway):
@@ -178,6 +180,7 @@ class StateController:
     
     @staticmethod           
     def handle_state(car:Car):
+        # print(StateController.get_state(car))
         match(StateController.get_state(car)):
             case "fric":
                 return StateController.fric_state(car)
@@ -202,6 +205,6 @@ class StateController:
             case "compelled_lane_changed":
                 return StateController.compelled_lane_changed(car)
             case _ :
-                pass
+                return np.array([[0.], [0.]])
 
 

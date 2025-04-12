@@ -39,7 +39,6 @@ class GenerateVehicles:
     
     def generate_vehicles(
         self,
-        id, 
         current_pos_x, 
         current_pos_y, 
         current_velocity_x, 
@@ -61,7 +60,6 @@ class GenerateVehicles:
         vehicles = []
         vehicles = [
             Car(
-                id = id, 
                 current_pos_x = current_pos_x, 
                 current_pos_y = current_pos_y, 
                 current_velocity_x = current_velocity_x, 

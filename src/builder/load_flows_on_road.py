@@ -1,6 +1,5 @@
 from src.tools.parse_flows_file import ParseFlows
 from src.builder.generate_vehicles import GenerateVehicles
-import uuid
 
 class LoadFlowsOnRoad:
     def __init__(
@@ -39,6 +38,7 @@ class LoadFlowsOnRoad:
         for road in self.net:
             for key in flows_dict.keys():
                 if road.id == key:
+                    # print(road.central_line)
                     road.vehicles_list = GenerateVehicles(
                         start_time=self.start_time,
                         end_time=self.end_time,
@@ -46,17 +46,16 @@ class LoadFlowsOnRoad:
                         min_interval=flows_dict[key]["min_interval"],
                         flows=flows_dict[key]["flow"]
                     ).generate_vehicles(
-                        id=uuid.uuid4(),
                         current_pos_x=road.central_line,
                         current_pos_y=0,
-                        current_velocity_y=road.max_allowed_speed,
                         current_velocity_x=0,
+                        current_velocity_y=12,
                         current_acceleration_x=0,
                         current_acceleration_y=0,
-                        next_pos_x=0,
+                        next_pos_x=road.central_line,
                         next_pos_y=0,
                         next_velocity_x=0,
-                        next_velocity_y=0,
+                        next_velocity_y=12,
                         next_acceleration_x=0,
                         next_acceleration_y=0,
                         on_which_road_id=key,

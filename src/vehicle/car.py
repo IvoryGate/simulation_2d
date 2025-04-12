@@ -4,7 +4,7 @@ class Car(BaseVehicle):
     CAR_LENGTH:float = 5.0
     CAR_WIDTH:float = 2.0
     def __init__(
-        self, id: str, 
+        self,
         current_pos_x: float, 
         current_pos_y: float, 
         current_velocity_x: float, 
@@ -26,7 +26,6 @@ class Car(BaseVehicle):
         car_width: float = CAR_WIDTH
     ) -> None:
         super().__init__(
-            id, 
             current_pos_x, 
             current_pos_y, 
             current_velocity_x, 

@@ -1,9 +1,9 @@
 from src.road.base_road import BaseRoad
+import uuid
 class BaseVehicle:
     DEPATURE_TIME: float = 0.0,
     def __init__(
         self,
-        id: str,
         current_pos_x: float,
         current_pos_y: float,
         current_velocity_x: float, 
@@ -22,7 +22,7 @@ class BaseVehicle:
         follower: None,
         depature_time: float = DEPATURE_TIME,
     ) -> None:
-        self.id = id
+        self.id = uuid.uuid4(), 
         self.depature_time = depature_time
         self.current_pos_x = current_pos_x
         self.current_pos_y = current_pos_y
@@ -48,4 +48,5 @@ class BaseVehicle:
         self.current_velocity_y = self.next_velocity_y
         self.current_acceleration_x = self.next_acceleration_x
         self.current_acceleration_y = self.next_acceleration_y
+
     

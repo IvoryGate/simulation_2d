@@ -50,8 +50,6 @@ class Loop:
         update = Update(delta_step=self.per_step,combined_net_flows=combined_net_flows)
         with open(self.detail_output, 'w', newline='') as file:
             pass
-        # update.create_record_file(self.detail_output)
         for step in Loop.float_range(self.start_time,self.end_time,self.per_step):
             update.get_step(step=step)
-            # print(update.step)
-            update.unpdate_and_record(output_file=self.detail_output)
+            update.update_and_record(output_file=self.detail_output)

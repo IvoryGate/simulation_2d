@@ -23,8 +23,8 @@ class Caculate:
         q_v = (car_i_v * tao + s_r)/x_xing
         Q = np.array([[1, 0], [0, q_v]])
         Q_ni = np.linalg.inv(Q)
-        x_k = np.array([[car_k.current_pos_x - car_k.car_width / 2],[car_k.current_pos_y - car_k.car_length / 2]])
-        x_i = np.array([[car_i.current_pos_x - car_i.car_width / 2],[car_i.current_pos_y - car_i.car_length / 2]] )
+        x_k = np.array([[car_k.current_pos_x ],[car_k.current_pos_y ]])
+        x_i = np.array([[car_i.current_pos_x ],[car_i.current_pos_y ]] )
         v_i = np.array([[car_i.current_velocity_x], [car_i.current_velocity_y]])
         v_k = np.array([[car_k.current_velocity_x], [car_k.current_velocity_y]])
         r_ik = np.dot(Q_ni, x_k - x_i)
@@ -62,7 +62,8 @@ class Caculate:
     def calculate_all_repulsion_force(car:Car,vehicles):
         join_force = np.array([[0.], [0.]])
         for other_car in vehicles:
-            if 0 < other_car.current_pos_y - car.current_pos_y <= 500 and 0 < other_car.current_pos_x - car.current_pos_x <= params.X_XING:
+            if 0 <= other_car.current_pos_y - car.current_pos_y <= 500 :
+            # and 0 < other_car.current_pos_x - car.current_pos_x <= params.X_XING:
                 join_force += Caculate.calculate_repulsion(car_i=car, car_k=other_car, tao=params.TAO, s_r=params.S_R, x_xing=params.X_XING, c_2=params.C_2, c_3=params.C_3)
             else:
                 join_force += np.array([[0.], [0.]])
@@ -91,7 +92,7 @@ class Caculate:
                 dist = car_ramp.current_pos_y - car.current_pos_y - car_ramp.car_length
                 if 0 < dist < min_rear_dist :
                     min_rear_dist = dist
-                    rear_headway = dist/ car_ramp.v_y
+                    rear_headway = dist/ car_ramp.current_velocity_y
         return min_front_dist,min_rear_dist,front_headway,rear_headway
 
     @staticmethod

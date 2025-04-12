@@ -1,5 +1,4 @@
 import json
-
 class ParseNet:
 
     def __init__(
